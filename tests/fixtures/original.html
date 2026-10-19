@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>社内リンク集</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        /* 基本スタイル */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: rgba(246,246,246,1);
+            margin: 0;
+            padding: 0;
+            color: #333;
+            font-size: 14px;
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            box-sizing: border-box;
+        }
+        /* ヘッダー */
+        .page-header {
+            text-align: center;
+            padding-top: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        /* ページタイトル */
+        .links-page-title {
+            color: #2C3E50;
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-top: 3rem;
+            margin-bottom: 35px;
+            position: relative;
+            padding-bottom: 20px;
+            letter-spacing: 0.03em;
+            text-align: center;
+        }
+        .links-page-title::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, #FF8C00, #FFA500);
+            border-radius: 2px;
+        }
+        /* 検索ボックス */
+        .search-box {
+            margin: 1.5rem 0 3rem 0;
+            text-align: center;
+        }
+        .search-box input {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            display: block;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: #FF8C00;
+            box-shadow: 0 0 0 4px rgba(255,140,0,0.2);
+        }
+        /* セクション */
+        .section {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            color: #2C3E50;
+        }
+        .section-title i {
+            margin-right: 0.5rem;
+            color: #FF8C00;
+            font-size: 1.5rem;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, #FF8C00, #FFA500);
+            border-radius: 2px;
+        }
+        /* リンクグリッド */
+        .links-grid {
+            display: grid;
+            gap: 0.75rem;
+            grid-template-columns: repeat(5, 1fr);
+            grid-auto-rows: 1fr;
+        }
+        @media (max-width: 1024px) {
+            .links-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
+            .links-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .search-box input {
+                padding: 0.5rem;
+            }
+            .section {
+                padding: 1rem;
+            }
+            .links-page-title {
+                font-size: 2em;
+                margin-bottom: 30px;
+            }
+        }
+        /* カード */
+        .link-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-color: #F8F8F8;
+            border-radius: 8px;
+            padding: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid #E0E0E0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            height: 100%;
+            position: relative;
+        }
+        .link-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            border-color: #FFDAB9;
+            background-color: #FFEBCC;
+            color: #FF6F00;
+        }
+        .card-icon {
+            margin-bottom: 0.5rem;
+            font-size: 1.75rem;
+        }
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #2C3E50;
+            word-break: break-word;
+        }
+        
+        /* カスタムツールチップ（元の挙動に戻しました！） */
+        .link-card::after {
+            content: attr(data-title);
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            padding: 0.25rem 0.5rem;
+            background: rgba(0,0,0,0.75);
+            color: #fff;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 10;
+        }
+        .link-card:hover::after {
+            opacity: 1;
+        }
+
+        /* 固定配置用リンク */
+        .fixed-link {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            background-color: #333;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            transition: background-color 0.3s;
+            font-weight: 500;
+            z-index: 100;
+        }
+        .fixed-link:hover {
+            background-color: #E67300;
+        }
+        .subsection { margin-top: 2rem; }
+        .subsection-title { font-size: 1.25rem; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="links-page-container">
+            <h1 class="links-page-title">各種リンク集</h1>
+            
+            <div class="search-box">
+                <input type="text" placeholder="リンクを検索…" onkeyup="filterLinks(this.value)">
+            </div>
+
+            <section class="section" id="section-soumu">
+                <h2 class="section-title">
+                    <i data-feather="clipboard"></i>
+                    庶務関連申請
+                </h2>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">申請</h3>
+                    <div class="links-grid">
+                        <a href="https://forms.gle/qvC4xMax1qYHb9MR6" class="link-card">
+                            <i class="card-icon" data-feather="file-text"></i>
+                            <span class="card-title">セキュリティカード（新規、変更、返却）</span>
+                        </a>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfXE-cmOV0VMrnQ8oj2tEGFIEO6YK4v0B7lj_3J3Lxb8IAlJQ/viewform" class="link-card">
+                            <i class="card-icon" data-feather="credit-card"></i>
+                            <span class="card-title">竹芝DSセコムカード申請</span>
+                        </a>
+                        <a href="https://mail.google.com/mail/?view=cm&to=fwd-request-ml@systena.co.jp&cc=&bcc=&su=DI備品購入申請メール_社員番号氏名&body=TO：本部事業推進室　ご担当者様%0D%0A%0D%0Aお疲れ様です。%0D%0A●●事業部 第●開発部の●●です。%0D%0A%0D%0A下記の内容にて、物品の購入申請を提出致します。%0D%0A%0D%0Aここから~~~~~~~~~~~~~　（下記項目全て必須）%0D%0A■申請者_社員番号:　XXXXXX%0D%0A■申請者_氏名:　●●●●%0D%0A■利用ＰＪ名称／ＰＪコード:　ＰＪ名称／XXXXXXXXXX%0D%0A■費用負担部門コード:　　購入費用の負担先となる部門コードを指定してください。%0D%0A■顧客請求:　有／無　※案件利用で購入費用を顧客に請求する場合は「有」としてください。%0D%0A　　　　　　　　　　　売上月に財務経理部宛てに売上取消連絡が必要となります。%0D%0A■購入備品名称:　パソコン、ハブ、ルーターなど、機種など指定してください。%0D%0A■購入先:　URLなど商品固有のページ等を記載し、価格や商品が曖昧にならないようにしてください。%0D%0A　　　　　※原則、カウネット　または　Amazonをご利用ください。%0D%0A■用途　:　用途をご記入下さい%0D%0A■金額（税込）:　9,999円%0D%0A■利用開始日:　希望日%0D%0A■その他:　●●●補足等あれば、添付ファイルなどご利用ください●●●　%0D%0A　　※承認済みの部門長をCCに含めてください%0D%0A~~~~~~~~~~~~~ここまで（消さないでください）%0D%0A%0D%0A上記、宜しくお願い致します。%0D%0A%0D%0A以上です。%0D%0A%0D%0A本部事業推進室利用_https://docs.google.com/spreadsheets/d/1WegTepFV5x_gVrfd28TukGFSQTQ9ZCu5xkGtdb6w6tg/edit#gid=0%0D%0A" class="link-card">
+                            <i class="card-icon" data-feather="shopping-cart"></i>
+                            <span class="card-title">備品購入申請</span>
+                        </a>
+                        <a href="https://forms.gle/9Na4rLJfH4PjqvnEA" class="link-card">
+                            <i class="card-icon" data-feather="box"></i>
+                            <span class="card-title">備品申請</span>
+                        </a>
+                        <a href="https://forms.gle/pen4Hzh5gY3DUqxZ8" class="link-card">
+                            <i class="card-icon" data-feather="cpu"></i>
+                            <span class="card-title">AIライセンス<br>経費使用申請</span>
+                        </a>
+                        <a href="https://docs.google.com/forms/viewform?hl=ja&id=1TMwo3lLvfR1gUA_g4ESSrtIktxstadDrGcMhb5r-JVw" class="link-card">
+                            <i class="card-icon" data-feather="award"></i>
+                            <span class="card-title">資格取得手当申請</span>
+                        </a>
+                        <a href="https://mail.google.com/mail/?view=cm&to=fwd-request-ml@systena.co.jp&cc=&bcc=&su=%E3%80%90Oracle%E5%8F%97%E9%A8%93%E3%83%81%E3%82%B1%E3%83%83%E3%83%88%E7%94%B3%E8%BE%BC%E3%80%91%E7%A4%BE%E5%93%A1%E7%95%AA%E5%8F%B7_%E6%B0%8F%E5%90%8D_yyyymmdd&body=%EF%BC%B4%EF%BC%AF%EF%BC%9A%E6%9C%AC%E9%83%A8%E6%94%AF%E6%8F%B4%E5%AE%A4%E5%A5%91%E7%B4%84%E4%BA%8B%E5%8B%99%E3%80%80%E3%81%94%E6%8B%85%E5%BD%93%E8%80%85%E6%A7%98%0D%0A%0D%0A%E3%81%8A%E7%96%B2%E3%82%8C%E6%A7%98%E3%81%A7%E3%81%99%E3%80%82%0D%0A%E7%AC%AC%E2%97%8F%E6%8A%80%E8%A1%93%E9%83%A8%E3%81%AE%E2%97%8F%E2%97%8F%E3%81%A7%E3%81%99%E3%80%82%0D%0A%0D%0AOracle%E5%8F%97%E9%A8%93%E3%83%81%E3%82%B1%E3%83%83%E3%83%88%E3%81%AE%E7%94%B3%E8%BE%BC%E3%81%AE%E5%AF%BE%E5%BF%9C%E3%82%92%E3%81%8A%E9%A1%98%E3%81%84%E8%B6%B3%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0D%0A%E4%B8%8B%E8%A8%98%E3%81%AE%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AB%E8%A8%98%E8%BC%89%E3%81%97%E3%81%A6%E3%81%84%E3%82%8B%E9%80%9A%E3%82%8A%E3%80%81%0D%0A%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E3%81%95%E3%82%93%E3%81%8C%E5%8F%97%E9%A8%93%E8%80%85%E3%81%A8%E3%81%AA%E3%82%8A%E3%81%BE%E3%81%99%E3%80%82%0D%0A%0D%0Aoracle%E5%8F%97%E9%A8%93%E3%83%81%E3%82%B1%E3%83%83%E3%83%88%E7%99%BA%E8%A1%8C%E8%80%85%E4%B8%80%E8%A6%A7%0D%0Ahttps://docs.google.com/spreadsheets/d/1zQ-zm32ASANoB5aup4inuXMR-4p9q6-gABYOtsGBvuk/%0D%0A%0D%0A%E4%B8%8A%E8%A8%98%E3%80%81%E5%AE%9C%E3%81%97%E3%81%8F%E3%81%8A%E9%A1%98%E3%81%84%E8%87%B4%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0D%0A%0D%0A%E4%BB%A5%E4%B8%8A%E3%81%A7%E3%81%99%E3%80%82%0D%0A%0D%0A%E6%94%AF%E6%8F%B4%E5%AE%A4%E5%88%A9%E7%94%A8_https://docs.google.com/spreadsheets/d/1zQ-zm32ASANoB5aup4inuXMR-4p9q6-gABYOtsGBvuk/edit#gid=0%0D%0A" class="link-card">
+                            <i class="card-icon" data-feather="tag"></i>
+                            <span class="card-title">Oracle割引受験チケット申し込み</span>
+                        </a>
+                        <a href="https://forms.gle/fCNDGvAx1aawvpvH7" class="link-card">
+                            <i class="card-icon" data-feather="users"></i>
+                            <span class="card-title">PC/スマホ/通信機器（貸出、返却、変更）</span>
+                        </a>
+                        <a href="https://forms.gle/8LcMXVf12gP9A8QN8" class="link-card">
+                            <i class="card-icon" data-feather="wifi"></i>
+                            <span class="card-title">無線LAN利用申請（開評用）</span>
+                        </a>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfa9nU2kNi9YJ2IGeir5Xcm-uFozxWs_80jTZ0H-_KoB2raXw/viewform" class="link-card">
+                            <i class="card-icon" data-feather="calendar"></i>
+                            <span class="card-title">催事届申請</span>
+                        </a>
+                        <a href="https://docs.google.com/forms/viewform?hl=ja&id=1BJGMaO3fKcD7-KeefRJx4wVdfYhff-CtYca8CaoWgYA" class="link-card">
+                            <i class="card-icon" data-feather="file-minus"></i>
+                            <span class="card-title">名刺作成申請</span>
+                        </a>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSepqFpSbjupBFxUZkGfMLM55U8tOBwOsvakJGH9Z5H7XkoLaQ/viewform" class="link-card">
+                            <i class="card-icon" data-feather="dollar-sign"></i>
+                            <span class="card-title">各種諸手当（シフト勤務者／交代勤務手当）</span>
+                        </a>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLScUD7jet9-FJQKpgP8M0-gCNL5AZAFupH7t7so0jzu9hbcDtA/viewform" class="link-card">
+                            <i class="card-icon" data-feather="coffee"></i>
+                            <span class="card-title">本社の来客時のお茶出し申請フォーム</span>
+                        </a>
+                        <a href="https://mail.google.com/mail/?view=cm&to=fwd-request-ml@systena.co.jp&cc=&bcc=&su=%E3%81%9D%E3%81%AE%E4%BB%96%E3%80%81%E7%9B%B8%E8%AB%87%E4%BA%8B%E9%A0%85%E3%81%AE%E3%81%94%E9%80%A3%E7%B5%A1_%E2%97%8F%E6%9C%88%E2%97%8F%E6%97%A5&body=%EF%BC%B4%EF%BC%AF%EF%BC%9A%E6%9C%AC%E9%83%A8%E4%BA%8B%E6%A5%AD%E6%8E%A8%E9%80%B2%E5%AE%A4%E3%80%80%E6%8B%85%E5%BD%93%E8%80%85%E6%A7%98%0D%0A%0D%0A%E3%81%8A%E7%96%B2%E3%82%8C%E6%A7%98%E3%81%A7%E3%81%99%E3%80%82%0D%0A%E7%AC%AC%E2%97%8F%E6%8A%80%E8%A1%93%E9%83%A8%E3%81%AE%E2%97%8F%E2%97%8F%E3%81%A7%E3%81%99%E3%80%82%0D%0A%0D%0A%E4%B8%8B%E8%A8%98%E3%81%AE%E4%BE%9D%E9%A0%BC%E3%80%81%E7%9B%B8%E8%AB%87%E4%BA%8B%E9%A0%85%E3%82%92%E9%80%81%E4%BB%98%E3%81%84%E3%81%9F%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0D%0A%E5%86%85%E5%AE%B9%E3%82%92%E3%81%94%E7%A2%BA%E8%AA%8D%E9%A0%82%E3%81%8D%E3%80%81%E3%81%94%E5%9B%9E%E7%AD%94%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%82%0D%0A%0D%0A%E3%81%93%E3%81%93%E3%81%8B%E3%82%89~~~~~~~~~~~~~%0D%0A%EF%BD%B6%EF%BE%83%EF%BD%BA%EF%BE%9E%EF%BE%98%E3%80%80%E5%BA%B6%E5%8B%99%E7%B3%BB%E3%80%80/%E3%80%80%E5%96%B6%E4%BA%8B%E7%B3%BB%E3%80%80/%E3%80%80%E8%B3%BC%E8%B2%B7%E7%B3%BB%E3%80%80%E3%80%80%E2%80%BB%E4%B8%8D%E8%A6%81%E3%81%AA%E9%83%A8%E5%88%86%E5%89%8A%E9%99%A4%0D%0A%0D%0A%E3%81%8A%E5%95%8F%E3%81%84%E5%90%88%E3%82%8F%E3%81%9B%EF%BC%9A%0D%0A%0D%0A%0D%0A%0D%0A%0D%0A%0D%0A%0D%0A%0D%0A~~~~~~~~~~~~~%0D%0A%E9%83%A8%E9%96%80%E9%95%B7%E3%82%92CC%E3%81%AB%E5%90%AB%E3%82%81%E3%81%BE%E3%81%97%E3%81%9F%E3%81%8B%E3%80%80%E3%81%AF%E3%81%84%E3%83%BB%E3%81%84%E3%81%84%E3%81%88%0D%0A~~~~~~~~~~~~~%E3%81%93%E3%81%93%E3%81%BE%E3%81%A7%EF%BC%88%E6%B6%88%E3%81%95%E3%81%AA%E3%81%84%E3%81%A7%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%EF%BC%89%0D%0A%E4%B8%8A%E8%A8%98%E3%80%81%E5%AE%9C%E3%81%97%E3%81%8F%E3%81%8A%E9%A1%98%E3%81%84%E8%87%B4%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0D%0A%E4%BB%A5%E4%B8%8A%E3%81%A7%E3%81%99%E3%80%82%0D%0A%0D%0A%E6%94%AF%E6%8F%B4%E5%AE%A4%E5%88%A9%E7%94%A8_https://docs.google.com/spreadsheets/d/1PGewchgWeMipvLQFM9J21umdp4F58lwXyABZAh47vvE/edit#gid=0%0D%0A" class="link-card">
+                            <i class="card-icon" data-feather="message-circle"></i>
+                            <span class="card-title">その他、相談事項</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">ツール</h3>
+                    <div class="links-grid">
+                        <a href="https://docs.google.com/spreadsheets/d/1M7Wbi2KyeQ3f0LdY3s_aXsAhQhHM4jWh/edit?gid=1377006618#gid=1377006618" class="link-card">
+                            <i class="card-icon" data-feather="book"></i>
+                            <span class="card-title">資格手当一覧表</span>
+                        </a>
+                        <a href="https://docs.google.com/spreadsheets/d/1D2F2964PMPbdPX1ChhofvKHOLuTUzkfp28TCN7Fu9Y0/edit?gid=55669611#gid=55669611" class="link-card">
+                            <i class="card-icon" data-feather="mail"></i>
+                            <span class="card-title">本部管理メーリングリスト一覧</span>
+                        </a>
+                        <a href="https://docs.google.com/presentation/d/1RrQEA0TUCIBsRERVUZ3w4ghRtLRL0ZUM/export/pptx" class="link-card" data-title="PowerPoint形式でダウンロードします">
+                            <i class="card-icon" data-feather="layout"></i>
+                            <span class="card-title">会社紹介テンプレート</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">マニュアル</h3>
+                    <div class="links-grid">
+                        <a href="https://docs.google.com/document/d/1UASxFy4oq8KVo_GtH-sXYAUsw5WzF24wa7oqceUbLik/edit" class="link-card">
+                            <i class="card-icon" data-feather="download"></i>
+                            <span class="card-title">備品一覧</span>
+                        </a>
+                        <a href="https://docs.google.com/document/d/1eAZjdXP8HdTKrFD4UULEbVPf_RO__uz2gp55xOO5TGA/edit#heading=h.6p3cyj7bt5ga" class="link-card">
+                            <i class="card-icon" data-feather="download"></i>
+                            <span class="card-title">催事対応時の流れ</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="section-koubai">
+                <h2 class="section-title">
+                    <i data-feather="clipboard"></i>
+                    購買関連
+                </h2>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">申請</h3>
+                    <div class="links-grid">
+                        <a href="https://mail.google.com/mail/u/0/?to=fwd-request-ml@systena.co.jp&cc&bcc&su=DI%E5%A5%91%E7%B4%84%E9%80%A3%E7%B5%A1%E3%80%80%E6%96%B0%E8%A6%8F%E5%8D%94%E5%8A%9B%E4%BC%9A%E7%A4%BE%E3%80%80%E5%9F%BA%E6%9C%AC%E5%A5%91%E7%B4%84%E7%B7%A0%E7%B5%90%E3%82%92%E3%81%8A%E9%A1%98%E3%81%84%E8%87%B4%E3%81%97%E3%81%BE%E3%81%99_%E2%97%8F/%E2%97%8F&body=%EF%BC%B4%EF%BC%AF%EF%BC%9A%E6%9C%AC%E9%83%A8%E4%BA%8B%E6%A5%AD%E6%8E%A8%E9%80%B2%E5%AE%A4%E3%80%80%E3%81%94%E6%8B%85%E5%BD%93%E8%80%85%E6%A7%98%0D%0A%0D%0A%E3%81%8A%E7%96%B2%E3%82%8C%E6%A7%98%E3%81%A7%E3%81%99%E3%80%82%0D%0A%E7%AC%AC%E2%97%8F%E6%8A%80%E8%A1%93%E9%83%A8%E3%81%AE%E2%97%8F%E2%97%8F%E3%81%A7%E3%81%99%E3%80%82%0D%0A%0D%0A%E4%B8%8B%E8%A8%98%E3%81%AE%E4%BC%9A%E7%A4%BE%E3%81%A8%E5%9F%BA%E6%9C%AC%E5%A5%91%E7%B4%84%E3%82%92%E7%B7%A0%E7%B5%90%E3%81%97%E3%81%9F%E3%81%8F%E3%80%81%0D%0A%E3%81%8A%E6%89%8B%E7%B6%9A%E3%81%8D%E3%82%92%E9%80%B2%E3%82%81%E3%81%A6%E9%A0%82%E3%81%91%E3%81%BE%E3%81%99%E3%81%A7%E3%81%97%E3%82%87%E3%81%86%E3%81%8B%E3%80%82%0D%0A%0D%0A%E4%B8%8B%E8%A8%98%E6%83%85%E5%A0%B1%E3%82%92%E5%85%B1%E6%9C%89%E8%87%B4%E3%81%97%E3%81%BE%E3%81%99%E3%81%AE%E3%81%A7%E3%80%81%0D%0A%E5%AE%9C%E3%81%97%E3%81%8F%E3%81%8A%E9%A1%98%E3%81%84%E8%87%B4%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0D%0A%E3%81%BE%E3%81%9F%E3%80%81%E5%95%8F%E9%A1%8C%E3%81%82%E3%82%8A%E3%81%BE%E3%81%97%E3%81%9F%E3%82%89%E3%80%81%E5%BD%93%E6%96%B9%E3%81%BE%E3%81%A7%E3%81%94%E9%80%A3%E7%B5%A1%E3%82%92%E3%81%8A%E9%A1%98%E3%81%84%E8%87%B4%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0D%0A%0D%0A%E3%81%93%E3%81%93%E3%81%8B%E3%82%89~~~~~~~~~~~~~%0D%0A%E2%91%A0%E6%96%B0%E8%A6%8F%E5%A5%91%E7%B4%84%E8%83%8C%E6%99%AF%0D%0A%E3%80%80%E2%87%92%E5%8F%96%E5%BC%95%E3%82%92%E9%96%8B%E5%A7%8B%E3%81%99%E3%82%8B%E3%81%AB%E3%81%82%E3%81%9F%E3%82%8A%E3%80%81%E8%AA%AC%E6%98%8E%E3%81%AE%E3%81%A4%E3%81%8F%E7%90%86%E7%94%B1%E3%82%92%E3%81%94%E8%A8%98%E5%85%A5%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%82%0D%0A%E2%91%A1%E4%BC%9A%E7%A4%BE%E6%83%85%E5%A0%B1%0D%0A%E3%80%80%E2%87%92%E4%BC%9A%E7%A4%BE%E5%90%8D%EF%BC%9A%E2%97%8F%E2%97%8F%E5%8D%94%E5%8A%9B%E4%BC%9A%E7%A4%BE%E5%90%8D%E2%97%8F%E2%97%8F%0D%0A%E3%80%80%E2%87%92%E4%BB%A3%E8%A1%A8%E8%80%85%EF%BC%9A%E2%97%8F%E2%97%8F%E5%8D%94%E5%8A%9B%E4%BC%9A%E7%A4%BE%E4%BB%A3%E8%A1%A8%E8%80%85%E5%90%8D%E2%97%8F%E2%97%8F%0D%0A%E3%80%80%E2%87%92%E3%82%B5%E3%82%A4%E3%83%88%EF%BC%9A%E2%97%8F%E2%97%8F%E4%BC%9A%E7%A4%BEHP%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%E2%97%8F%E2%97%8F%0D%0A%E2%91%A2%E9%80%A3%E7%B5%A1%E5%85%88%0D%0A%E3%80%80%E2%87%92%E6%8B%85%E5%BD%93%E8%80%85%E6%B0%8F%E5%90%8D%EF%BC%9A%E5%9F%BA%E6%9C%AC%E5%A5%91%E7%B4%84%E7%B7%A0%E7%B5%90%E6%8B%85%E5%BD%93%E8%80%85%EF%BC%88%E5%8D%94%E5%8A%9B%E4%BC%9A%E7%A4%BE%EF%BC%89%E5%90%8D%0D%0A%E3%80%80%E2%87%92%E9%9B%BB%E8%A9%B1%E7%95%AA%E5%8F%B7%EF%BC%9A%E4%B8%8A%E8%A8%98%E6%8B%85%E5%BD%93%E8%80%85%E3%81%AE%E9%80%A3%E7%B5%A1%E5%85%88%E9%9B%BB%E8%A9%B1%E7%95%AA%E5%8F%B7%0D%0A%E3%80%80%E2%87%92%E6%8B%85%E5%BD%93%E8%80%85Mail%EF%BC%9A%E4%B8%8A%E8%A8%98%E6%8B%85%E5%BD%93%E8%80%85%E3%81%AE%E9%80%A3%E7%B5%A1%E5%85%88%E3%83%A1%E3%83%BC%E3%83%AB%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%0D%0A%E2%91%A3%E6%A1%88%E4%BB%B6%EF%BC%9A%E2%97%8F%E2%97%8F%E8%A9%B2%E5%BD%93%E6%8A%80%E8%A1%93%E8%80%85%E3%81%8C%E5%8F%82%E7%94%BB%E3%81%99%E3%82%8B%E6%A1%88%E4%BB%B6%E5%90%8D%E2%97%8F%E2%97%8F%0D%0A%E3%80%80%E2%87%92%E6%89%80%E6%84%9F%EF%BC%9A%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%0D%0A%E8%A6%81%E5%89%8A%E9%99%A4%E3%80%80%E4%BE%8B%EF%BC%9A%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E2%97%8F%E3%81%AB%E5%8A%9B%E3%82%92%E5%85%A5%E3%82%8C%E3%81%A6%E3%81%8A%E3%82%8A%E3%80%81%E5%BD%93%E9%83%A8%E9%96%80%E3%81%A8%E3%81%AE%E3%82%B9%E3%82%AD%E3%83%AB%E3%83%9E%E3%83%83%E3%83%81%E3%81%8C%E8%A6%8B%E8%BE%BC%E3%81%BE%E3%82%8C%E3%80%81%E8%AA%BF%E9%81%94%E5%85%88%E3%81%A8%E3%81%97%E3%81%A6%E6%9C%89%E5%8A%9B%E3%81%A8%E8%80%83%E3%81%88%E3%82%8B%E3%80%82%E3%81%9D%E3%81%AE%E7%82%BA%E3%80%81%E6%96%B0%E8%A6%8F%E5%8F%96%E5%BC%95%E3%82%92%E9%96%8B%E5%A7%8B%E3%81%99%E3%82%8B%E3%80%82%0D%0A%E2%91%A4%E5%A5%91%E7%B4%84%E9%96%8B%E5%A7%8B%E5%B8%8C%E6%9C%9B%E6%97%A5%EF%BC%88%E4%BE%9D%E9%A0%BC%E6%97%A5%E3%82%88%E3%82%8A1%E9%80%B1%E9%96%93%E5%BE%8C%E3%81%A8%E3%81%AA%E3%82%8A%E3%81%BE%E3%81%99%EF%BC%89%0D%0A%E3%80%80%E2%87%92%E5%B8%8C%E6%9C%9B%E6%97%A5%EF%BC%9A%E2%97%8F%E2%97%8F/%E2%97%8F%E2%97%8F%E3%80%80%0D%0A%E8%A6%81%E5%89%8A%E9%99%A4%E3%80%80%E2%80%BB%E3%80%80%E5%A5%91%E7%B4%84%E7%B7%A0%E7%B5%90%E3%81%AB5%E5%96%B6%E6%A5%AD%E6%97%A5%E4%BB%A5%E4%B8%8A%E3%82%92%E8%A6%96%E9%87%8E%E3%81%AB%E5%85%A5%E3%82%8C%E3%81%A6%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%E3%80%82%E7%9B%B8%E6%89%8B%E6%96%B9%E3%81%A7%E3%83%AA%E3%83%BC%E3%82%AC%E3%83%AB%E3%83%81%E3%82%A7%E3%83%83%E3%82%AF%E7%AD%89%E3%81%8C%E5%85%A5%E3%82%8B%E5%A0%B4%E5%90%88%E3%80%81%E3%82%82%E3%81%A3%E3%81%A8%E3%81%8B%E3%81%8B%E3%82%8A%E3%81%BE%E3%81%99%E3%80%82%0D%0A%E2%91%A5%E4%BB%8A%E5%9B%9E%E3%81%AE%E5%A5%91%E7%B4%84%E5%BD%A2%E6%85%8B%0D%0A%E3%80%80%E2%87%92%E5%A5%91%E7%B4%84%E5%BD%A2%E6%85%8B%EF%BC%9A%E6%B4%BE%E9%81%A3%E5%A5%91%E7%B4%84%E3%80%81SES%E5%A5%91%E7%B4%84%EF%BC%88%E6%BA%96%E5%A7%94%E4%BB%BB%EF%BC%89%E3%80%81%E8%AB%8B%E8%B2%A0%E5%A5%91%E7%B4%84%E3%80%81%E3%81%AA%E3%81%A9%0D%0A%E2%91%A6%E6%89%BF%E8%AA%8D%E8%80%85%E6%B0%8F%E5%90%8D%0D%0A%E3%80%80%E2%87%92%E6%89%BF%E8%AA%8D%E8%80%85%E6%B0%8F%E5%90%8D%EF%BC%9A%E9%80%9A%E5%B8%B8%E3%81%AF%E4%BE%9D%E9%A0%BC%E9%83%A8%E9%96%80%E9%83%A8%E9%96%80%E9%95%B7%0D%0A%0D%0A%E3%80%80%E3%80%80%E2%80%BB%E3%80%80%E4%B8%8A%E9%95%B7%E3%82%92CC%E3%81%AB%E3%81%B5%E3%81%8F%E3%82%81%E3%81%BE%E3%81%97%E3%81%9F%E3%81%8B%EF%BC%9F%E3%80%80%E3%80%80%E3%80%80YES%E3%80%80or%E3%80%80NO%0D%0A%0D%0A~~~~~~~~~~~~~%E3%81%93%E3%81%93%E3%81%BE%E3%81%A7%EF%BC%88%E6%B6%88%E3%81%95%E3%81%AA%E3%81%84%E3%81%A7%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%EF%BC%89%0D%0A%0D%0A%E4%B8%8A%E8%A8%98%E3%80%81%E5%AE%9C%E3%81%97%E3%81%8F%E3%81%8A%E9%A1%98%E3%81%84%E8%87%B4%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0D%0A%0D%0A%E4%BB%A5%E4%B8%8A%E3%81%A7%E3%81%99%E3%80%82%0D%0A%0D%0A%E6%94%AF%E6%8F%B4%E5%AE%A4%E5%88%A9%E7%94%A8_https://docs.google.com/spreadsheets/d/1WU4V5WyhVCd54e78OpCZx72SAo8Ps7OlV7--w2gqP68/edit&fs=1&tf=cm#gid=490980488%0D%0A" class="link-card">
+                            <i class="card-icon" data-feather="file-plus"></i>
+                            <span class="card-title">BP新規基本契約</span>
+                        </a>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSer2o_0JppptYieaBzv4McWl4QEbbDi33ZV3EwiIBdidhpvsQ/viewform?usp=pp_url&entry.324783463=%E2%80%BB%E6%9C%AC%E4%BB%B6%E3%81%AF%E7%B2%97%E5%88%A920%EF%BC%85%E4%BB%A5%E4%B8%8A%E3%81%AE%E7%82%BA%E3%80%81%E9%83%A8%E9%95%B7%E6%B1%BA%E8%A3%81%E3%80%82&entry.942803933=0&entry.1062173854=0&entry.345505535=0" class="link-card">
+                            <i class="card-icon" data-feather="send"></i>
+                            <span class="card-title">BP新規‐参画確定連絡</span>
+                        </a>
+                        <a href="https://forms.gle/yWZs2TFTrQztUq9UA" class="link-card">
+                            <i class="card-icon" data-feather="edit-2"></i>
+                            <span class="card-title">BP契約変更・終了連絡</span>
+                        </a>
+                        <a href="https://systena.canbus.com/ElSknDdSC3uW8CJc" class="link-card">
+                            <i class="card-icon" data-feather="refresh-cw"></i>
+                            <span class="card-title">BPCanbus.パスワード初期化</span>
+                        </a>
+                        <a href="https://mail.google.com/mail/?view=cm&to=fwd-request-ml@systena.co.jp&cc=&bcc=&su=%E5%8D%94%E5%8A%9B%E4%BC%9A%E7%A4%BE%E8%A6%81%E5%93%A1%E3%81%AECanbus.%E5%88%9D%E6%9C%9F%E3%83%91%E3%82%B9%E3%83%AF%E3%83%BC%E3%83%89%E5%86%8D%E7%99%BA%E8%A1%8C%E3%81%AE%E3%81%8A%E9%A1%98%E3%81%84_%E2%97%8F/%E2%97%8F&body=%EF%BC%B4%EF%BC%AF%EF%BC%9A%E6%94%AF%E6%8F%B4%E5%AE%A4%E3%80%80%E3%81%94%E6%8B%85%E5%BD%93%E8%80%85%E6%A7%98%0D%0A%EF%BC%A3%EF%BC%A3%EF%BC%9A%E9%83%A8%E9%96%80%E9%95%B7%0D%0A%0D%0A%E3%81%8A%E7%96%B2%E3%82%8C%E6%A7%98%E3%81%A7%E3%81%99%E3%80%82%0D%0A%E7%AC%AC%E2%97%8F%E6%8A%80%E8%A1%93%E9%83%A8%E3%81%AE%E2%97%8F%E2%97%8F%E3%81%A7%E3%81%99%E3%80%82%0D%0A%0D%0A%E4%B8%8B%E8%A8%98%E8%A6%81%E5%93%A1%E3%81%AECanbus.%E5%88%9D%E6%9C%9F%E3%83%91%E3%82%B9%E3%83%AF%E3%83%BC%E3%83%89%E3%81%AE%E5%86%8D%E7%99%BA%E8%A1%8C%E3%82%92%E3%81%8A%E9%A1%98%E3%81%84%E8%87%B4%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0D%0A%E4%B8%8D%E6%B3%A8%E6%84%8F%E3%81%AB%E3%82%88%E3%82%8A%E3%80%81%E3%83%AD%E3%82%B0%E3%82%A4%E3%83%B3%E3%81%8C%E4%B8%8D%E5%8F%AF%E8%83%BD%E3%81%A8%E3%81%AA%E7%8A%B6%E6%85%8B%E3%81%A8%E3%81%AA%E3%82%8A%E3%81%BE%E3%81%97%E3%81%9F%E3%80%82%0D%0A%E3%81%94%E8%BF%B7%E6%83%91%E3%82%92%E3%81%8A%E3%81%8B%E3%81%91%E8%87%B4%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0D%0A%0D%0A%E3%81%93%E3%81%93%E3%81%8B%E3%82%89~~~~~~~~~~~~~%0D%0A%E3%83%BB%E6%8A%80%E8%A1%93%E8%80%85%E5%90%8D%E2%87%92%0D%0A%E3%83%BB%E5%8D%94%E5%8A%9B%E4%BC%9A%E7%A4%BE%E2%87%92%0D%0A%E3%83%BB%E5%8F%82%E7%94%BB%E6%97%A5%E2%87%92%0D%0A%E3%83%BB%E9%83%A8%E9%96%80%E8%B2%AC%E4%BB%BB%E8%80%85%E2%87%92%0D%0A%E3%80%80%E3%80%80%E2%80%BB%E3%80%80%E4%B8%8A%E9%95%B7%E3%82%92CC%E3%81%AB%E3%81%B5%E3%81%8F%E3%82%81%E3%81%BE%E3%81%97%E3%81%9F%E3%81%8B%EF%BC%9F%E3%80%80%E3%80%80%E3%80%80YES%E3%80%80or%E3%80%80NO%0D%0A~~~~~~~~~~~~~%E3%81%93%E3%81%93%E3%81%BE%E3%81%A7%EF%BC%88%E6%B6%88%E3%81%95%E3%81%AA%E3%81%84%E3%81%A7%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%EF%BC%89%0D%0A%0D%0A%E4%B8%8A%E8%A8%98%E3%80%81%E5%AE%9C%E3%81%97%E3%81%8F%E3%81%8A%E9%A1%98%E3%81%84%E8%87%B4%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0D%0A%0D%0A%E4%BB%A5%E4%B8%8A%E3%81%A7%E3%81%99%E3%80%82%0D%0A%0D%0A%E6%94%AF%E6%8F%B4%E5%AE%A4%E5%88%A9%E7%94%A8_https://docs.google.com/spreadsheets/d/1T9O9oupEOZvE9MNDVfvqeYMyF7e_7uijddvZm27ygOI/edit#gid=490980488%0D%0A" class="link-card">
+                            <i class="card-icon" data-feather="mail"></i>
+                            <span class="card-title">BPCanbus.パス確認メール</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">ツール</h3>
+                    <div class="links-grid">
+                        <a href="https://docs.google.com/spreadsheets/d/1QZXB7wSD7tKtgov8uUooMEMBkW-sP0J2gZ4U6gGoHpc/edit#gid=1258239927" class="link-card">
+                            <i class="card-icon" data-feather="check-circle"></i>
+                            <span class="card-title">基本契約の有無確認</span>
+                        </a>
+                        <a href="https://drive.google.com/drive/folders/1517_5WyHRYVlEqkTB8lMxAFMPwcpZY-A" class="link-card">
+                            <i class="card-icon" data-feather="send"></i>
+                            <span class="card-title">外注依頼書の提出</span>
+                        </a>
+                        <a href="https://docs.google.com/spreadsheets/d/1QZXB7wSD7tKtgov8uUooMEMBkW-sP0J2gZ4U6gGoHpc/edit#gid=1296808508" class="link-card">
+                            <i class="card-icon" data-feather="list"></i>
+                            <span class="card-title">基本契約一覧</span>
+                        </a>
+                        <a href="https://docs.google.com/spreadsheets/d/1y_SyiWyuvb0Dq13Pr-7gEwg1EW3WBU9pcNep9h2kcjM/edit#gid=0" class="link-card">
+                            <i class="card-icon" data-feather="link-2"></i>
+                            <span class="card-title">更改表リンク</span>
+                        </a>
+                        <a href="https://docs.google.com/spreadsheets/d/1C8BRwQBI9hcsDKmZ2eZVVF572iGt6Qk1yECzux3jqRs/edit#gid=1667581123" class="link-card">
+                            <i class="card-icon" data-feather="book-open"></i>
+                            <span class="card-title">個別契約管理台帳SS</span>
+                        </a>
+                        <a href="https://docs.google.com/spreadsheets/d/1QZXB7wSD7tKtgov8uUooMEMBkW-sP0J2gZ4U6gGoHpc/edit#gid=0" class="link-card">
+                            <i class="card-icon" data-feather="users"></i>
+                            <span class="card-title">BP社員番号一覧</span>
+                        </a>
+                        <a href="https://systena.canbus.com/space/f9a427b3a22648e7aead6620#:~:text=%E3%82%8C%E3%81%A6%E3%81%84%E3%81%BE%E3%81%99%E3%80%82-,FWD%E6%9C%AC%E9%83%A8%C2%A0%EF%BC%9C%E6%9C%AC%E7%A4%BE%EF%BC%9E,-%E3%82%BF%E3%82%A4%E3%83%A0%E3%83%AC%E3%83%9D%E3%83%BC%E3%83%88" class="link-card">
+                            <i class="card-icon" data-feather="download"></i>
+                            <span class="card-title">外注依頼書ダウンロード</span>
+                        </a>
+                        <a href="https://systena.canbus.com/U3q7ZmEJfs7MHkrx" class="link-card">
+                            <i class="card-icon" data-feather="key"></i>
+                            <span class="card-title">BPCanbus.初期パス確認</span>
+                        </a>
+                        <a href="https://docs.google.com/spreadsheets/d/1Mc6WRGu4sPjMGQJtqShwSedONrhbCvLlGwCM_fyF-ZA/edit#gid=0" class="link-card">
+                            <i class="card-icon" data-feather="alert-triangle"></i>
+                            <span class="card-title">非推奨ＢＰ一覧（ブラックリスト）</span>
+                        </a>
+                        <a href="https://docs.google.com/spreadsheets/d/1mGJi2nee6HCS_Wmr_DJfeCdg1n1VkP70XvDrQ3M7HDE/edit?gid=0#gid=0" class="link-card">
+                            <i class="card-icon" data-feather="user-x"></i>
+                            <span class="card-title">BP終了者一覧</span>
+                        </a>
+                        <a href="https://sites.google.com/systena.co.jp/link/%E5%90%84%E7%A8%AE%E3%83%AA%E3%83%B3%E3%82%AF/%E5%90%84%E6%8B%A0%E7%82%B9%E3%81%B8%E3%81%AE%E6%96%B0%E8%A6%8Fbp%E5%8F%82%E7%94%BB%E6%99%82%E3%81%AE%E5%AF%BE%E5%BF%9C%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6?authuser=0" class="link-card">
+                            <i class="card-icon" data-feather="log-in"></i>
+                            <span class="card-title">竹芝DS・本社への新規BPメンバー入場について</span>
+                        </a>
+                        <a href="https://drive.google.com/drive/folders/10GbUGnmW1TBGqf06nQWnQEz8twh4P_8j" class="link-card">
+                            <i class="card-icon" data-feather="shield"></i>
+                            <span class="card-title">BPセキュリティ回答</span>
+                        </a>
+                        <a href="https://docs.google.com/spreadsheets/d/1v2yqpCQg24TaDAfcQCkuN-4Y_daFievMMnZ68G7m2do/edit?gid=0#gid=0" class="link-card">
+                            <i class="card-icon" data-feather="hash"></i>
+                            <span class="card-title">案件募集状況<br>(外注依頼書番号採番簿)</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">マニュアル</h3>
+                    <div class="links-grid">
+                        <a href="https://systena.canbus.com/editor?path=%2Fo_1g3b0fs731khbib6nmk1pm81l5916.pdf&fileName=Canbus.%E7%A8%BC%E5%83%8D%E5%A0%B1%E5%91%8A%E3%83%9E%E3%83%8B%E3%83%A5%E3%82%A2%E3%83%AB%EF%BC%88%E3%83%91%E3%83%BC%E3%83%88%E3%83%8A%E3%83%BC%E5%90%91%E3%81%91%EF%BC%89_ver1.02.pdf" class="link-card">
+                            <i class="card-icon" data-feather="download"></i>
+                            <span class="card-title">BPマニュアルDL</span>
+                        </a>
+                        <a href="https://docs.google.com/presentation/d/1uLyAfOU9fWrU3arfuN6X0ajpDuQzz51QjxYkOzking0/edit?slide=id.g409cf4d11a5_0_66#slide=id.g409cf4d11a5_0_66" class="link-card">
+                            <i class="card-icon" data-feather="download"></i>
+                            <span class="card-title">案件掲載システム<br>マニュアル</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="section-eigyo">
+                <h2 class="section-title">
+                    <i data-feather="clipboard"></i>
+                    営業アシスタント
+                </h2>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">申請</h3>
+                    <div class="links-grid">
+                    <a href="https://mail.google.com/mail/?view=cm&to=fwd-assistant-ml@systena.co.jp&cc=&bcc=&su=%E3%80%90%E8%A6%8B%E7%A9%8D%E4%BD%9C%E6%88%90%E4%BE%9D%E9%A0%BC%E3%80%91%E6%8F%90%E5%87%BA%E6%9C%9F%E9%99%90%EF%BD%8D%EF%BD%8D%20/%20dd_%E9%A1%A7%E5%AE%A2%E5%90%8D_%E5%8F%97%E6%B3%A8%E7%A8%9F%E8%AD%B0%E6%9B%B8%E3%81%AEPJ%E5%90%8D_yyyymm&body=%EF%BC%B4%EF%BC%AF%EF%BC%9A%E6%9C%AC%E9%83%A8%E4%BA%8B%E6%A5%AD%E6%8E%A8%E9%80%B2%E5%AE%A4%E3%80%80%E5%96%B6%E6%A5%AD%E3%82%A2%E3%82%B7%E3%82%B9%E3%82%BF%E3%83%B3%E3%83%88%E5%90%84%E4%BD%8D%0D%0A%0D%0A%E3%81%8A%E7%96%B2%E3%82%8C%E6%A7%98%E3%81%A7%E3%81%99%E3%80%82%0D%0A%E2%97%8B%E2%97%8B%E2%97%8B%E9%83%A8%E3%81%AE%E2%97%8F%E2%97%8F%E3%81%A7%E3%81%99%E3%80%82%0D%0A%0D%0A%E4%B8%8B%E8%A8%98%E3%81%AE%E9%80%9A%E3%82%8A%E3%80%81%E8%A6%8B%E7%A9%8D%E4%BD%9C%E6%88%90%E4%BE%9D%E9%A0%BC%E3%82%92%E3%81%84%E3%81%9F%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0D%0A%E5%86%85%E5%AE%B9%E3%82%92%E3%81%94%E7%A2%BA%E8%AA%8D%E9%A0%82%E3%81%8D%E3%80%81%E6%89%8B%E7%B6%9A%E3%81%8D%E3%82%92%E3%81%8A%E9%A1%98%E3%81%84%E3%81%84%E3%81%9F%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0D%0A%0D%0A%EF%BC%9C%E6%A0%BC%E7%B4%8D%E5%85%88%EF%BC%9E%0D%0AURL%EF%BC%9A%0D%0A%E2%86%B3%20%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E5%90%8D%EF%BC%9A%0D%0A%0D%0A%EF%BC%9C%E9%A1%A7%E5%AE%A2%E6%8F%90%E5%87%BA%E7%89%A9%EF%BC%9E%E3%80%80%E2%80%BB%E3%81%8A%E5%AE%A2%E6%A7%98%E3%81%B8%E6%8F%90%E5%87%BA%E3%81%99%E3%82%8B%E8%A6%8B%E7%A9%8D%E6%9B%B8%E9%A1%9E%E7%AD%89%E3%81%8C%E3%81%94%E3%81%96%E3%81%84%E3%81%BE%E3%81%97%E3%81%9F%E3%82%89%E8%A8%98%E8%BC%89%E3%81%97%E3%81%A6%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%EF%BC%88%EF%BD%9E.PDF%E3%80%81%EF%BD%9E.xls%EF%BC%89%0D%0A%E3%83%BB%0D%0A%0D%0A%EF%BC%9C%20%E3%81%9D%E3%81%AE%E4%BB%96%E9%80%A3%E6%90%BA%E4%BA%8B%E9%A0%85%20%EF%BC%9E%20%E2%80%BB%E3%81%82%E3%82%8C%E3%81%B0%0D%0A%0D%0A~~~~~~~~~~~~~%0D%0A%E9%83%A8%E9%96%80%E9%95%B7%E3%82%92CC%E3%81%AB%E5%90%AB%E3%82%81%E3%81%BE%E3%81%97%E3%81%9F%E3%81%8B%20%E3%81%AF%E3%81%84%20%EF%BC%8F%20%E3%81%84%E3%81%84%E3%81%88%0D%0A~~~~~~~~~~~~~%E3%81%93%E3%81%93%E3%81%BE%E3%81%A7%EF%BC%88%E6%B6%88%E3%81%95%E3%81%AA%E3%81%84%E3%81%A7%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%EF%BC%89%0D%0A%0D%0A%E4%BB%A5%E4%B8%8A%E3%81%A7%E3%81%99%E3%80%82%E3%82%88%E3%82%8D%E3%81%97%E3%81%8F%E3%81%8A%E9%A1%98%E3%81%84%E3%81%84%E3%81%9F%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0D%0A%0D%0A%0D%0A" class="link-card" data-title="見積作成依頼申請を行います">
+                        <i class="card-icon" data-feather="mail"></i>
+                        <span class="card-title">見積作成依頼申請</span>
+                    </a>
+                    <a href="https://mail.google.com/mail/?view=cm&to=fwd-assistant-ml@systena.co.jp&cc=&bcc=&su=%E3%80%90%E8%AB%8B%E6%B1%82%E4%BE%9D%E9%A0%BC%E3%80%91%E9%A1%A7%E5%AE%A2%E5%90%8D_%E5%8F%97%E6%B3%A8%E7%A8%9F%E8%AD%B0%E6%9B%B8%E3%81%AEPJ%E5%90%8D_yyyymm&body=%EF%BC%B4%EF%BC%AF%EF%BC%9A%E6%9C%AC%E9%83%A8%E4%BA%8B%E6%A5%AD%E6%8E%A8%E9%80%B2%E5%AE%A4%E3%80%80%E5%96%B6%E6%A5%AD%E3%82%A2%E3%82%B7%E3%82%B9%E3%82%BF%E3%83%B3%E3%83%88%E5%90%84%E4%BD%8D%0D%0A%0D%0A%E3%81%8A%E7%96%B2%E3%82%8C%E6%A7%98%E3%81%A7%E3%81%99%E3%80%82%0D%0A%E2%97%8B%E2%97%8B%E2%97%8B%E9%83%A8%E3%81%AE%E2%97%8F%E2%97%8F%E3%81%A7%E3%81%99%E3%80%82%0D%0A%0D%0A%E4%B8%8B%E8%A8%98%E3%81%AE%E9%80%9A%E3%82%8A%E3%80%81%E8%AB%8B%E6%B1%82%E7%94%B3%E8%AB%8B%E3%82%92%E9%80%81%E4%BB%98%E3%81%84%E3%81%9F%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0D%0A%E5%86%85%E5%AE%B9%E3%82%92%E3%81%94%E7%A2%BA%E8%AA%8D%E9%A0%82%E3%81%8D%E3%80%81%E6%89%8B%E7%B6%9A%E3%81%8D%E3%82%92%E3%81%8A%E9%A1%98%E3%81%84%E3%81%84%E3%81%9F%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0D%0A%0D%0A%E3%81%93%E3%81%93%E3%81%8B%E3%82%89~~~~~~~~~~~~~%0D%0A%E2%97%86%E6%A1%88%E4%BB%B6%E6%83%85%E5%A0%B1%0D%0A%E3%80%80PJ%E5%90%8D%EF%BC%9A%0D%0A%E3%80%80PJ%E3%82%B3%E3%83%BC%E3%83%89%EF%BC%9A%0D%0A%E2%97%86%E8%AB%8B%E6%B1%82%E5%86%85%E5%AE%B9%EF%BC%88%E8%A4%87%E6%95%B0%E5%90%8D%E3%81%84%E3%82%8B%E5%A0%B4%E5%90%88%E3%81%AF%E3%80%81%E5%85%A8%E5%93%A1%E5%88%86%E8%A8%98%E8%BC%89%E3%82%82%E3%81%97%E3%81%8F%E3%81%AF%E7%A8%BC%E5%8B%95%E5%AE%9F%E7%B8%BE%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E9%80%A3%E6%90%BA%EF%BC%88%E3%83%A1%E3%83%BC%E3%83%AB%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E6%B7%BB%E4%BB%98%E3%80%81%E3%83%89%E3%83%A9%E3%82%A4%E3%83%96%E6%A0%BC%E7%B4%8D%E3%81%AA%E3%81%A9%EF%BC%89%E3%82%92%E3%81%8A%E9%A1%98%E3%81%84%E3%81%97%E3%81%BE%E3%81%99%EF%BC%89%0D%0A%E3%80%80%E4%BD%9C%E6%A5%AD%E8%80%85%E6%B0%8F%E5%90%8D%EF%BC%9A%0D%0A%E3%80%80%E6%9C%88%E7%A8%BC%E5%83%8D%E6%99%82%E9%96%93%EF%BC%88%E7%B2%BE%E7%AE%97%E5%B9%85%EF%BC%89%EF%BC%9A999.99%20H%EF%BC%88140-160H%EF%BC%89%0D%0A%E3%80%80%E3%82%B3%E3%82%A2%E3%82%BF%E3%82%A4%E3%83%A0%E3%81%AB%E5%AF%BE%E3%81%99%E3%82%8B%E7%B2%BE%E7%AE%97%E6%9C%89%E7%84%A1%EF%BC%88%E6%9C%89%E3%81%AE%E5%A0%B4%E5%90%88%E3%80%81%E7%B2%BE%E7%AE%97%E9%A1%8D%EF%BC%89%EF%BC%9A%E3%81%AA%E3%81%97%E3%80%80%EF%BC%8F%E3%80%80%E3%81%82%E3%82%8A%0D%0A%E3%80%80%E4%BA%A4%E9%80%9A%E8%B2%BB%E3%83%BB%E4%BB%96%E8%AB%8B%E6%B1%82%E6%9C%89%E7%84%A1%EF%BC%9A%E3%81%AA%E3%81%97%E3%80%80%EF%BC%8F%E3%80%80%E3%81%82%E3%82%8A%EF%BC%9A%E8%A9%B3%E7%B4%B0%E3%83%BB%E9%87%91%E9%A1%8D%E8%A8%98%E8%BC%89%0D%0A%0D%0A%E3%80%80%E6%A0%BC%E7%B4%8D%E5%85%88%E3%83%89%E3%83%A9%E3%82%A4%E3%83%96URL%EF%BC%9A%0D%0A%0D%0A%E2%97%86%E7%A8%BC%E5%83%8D%E6%99%82%E9%96%93%E3%80%80%E9%A1%A7%E5%AE%A2%E6%89%BF%E8%AA%8D%E6%B8%88%E3%81%BF%0D%0A%E3%80%80%E3%81%AF%E3%81%84%E3%80%80%EF%BC%8F%E3%80%80%E3%81%84%E3%81%84%E3%81%88%0D%0A%E2%97%86%E6%A4%9C%E5%8F%8E%E6%9B%B8%EF%BC%88%E8%AB%8B%E8%B2%A0%E5%A5%91%E7%B4%84%E3%81%A7%E7%B4%8D%E5%93%81%E7%89%A9%E3%81%82%E3%82%8A%E3%81%AE%E5%A0%B4%E5%90%88%E3%81%AE%E3%81%BF%EF%BC%89%0D%0A%E3%80%80%E3%81%AA%E3%81%97%E3%80%80%EF%BC%8F%E3%80%80%E3%81%82%E3%82%8A%E3%80%80%E6%A0%BC%E7%B4%8D%E5%85%88%E3%83%89%E3%83%A9%E3%82%A4%E3%83%96URL%EF%BC%9A%0D%0A%E2%97%86%E3%81%9D%E3%81%AE%E4%BB%96%E9%80%A3%E6%90%BA%E8%B3%87%E6%96%99%0D%0A%E3%80%80%E3%81%AA%E3%81%97%E3%80%80%EF%BC%8F%E3%80%80%E3%81%82%E3%82%8A%E3%80%80%E6%A0%BC%E7%B4%8D%E5%85%88%E3%83%89%E3%83%A9%E3%82%A4%E3%83%96URL%EF%BC%9A%0D%0A%0D%0A%EF%BC%9C%E4%BB%A5%E4%B8%8B%E4%BB%BB%E6%84%8F%E9%A0%85%E7%9B%AE%EF%BC%9E%0D%0A%E2%97%86%E9%A1%A7%E5%AE%A2%E6%8F%90%E5%87%BA%E6%9C%9F%E9%99%90%EF%BC%9Ayyyy/mm/dd%0D%0A%E2%97%86%E8%AB%8B%E6%B1%82%E5%85%88%0D%0A%E3%80%80%E3%81%94%E6%8B%85%E5%BD%93%E8%80%85%E6%A7%98%E5%90%8D%EF%BC%9A%0D%0A%E3%80%80%E9%80%A3%E7%B5%A1%E5%85%88%EF%BC%88%E3%83%A1%E3%83%BC%E3%83%AB%EF%BC%89%EF%BC%9A%0D%0A%E2%97%86%E8%AB%8B%E6%B1%82%E6%96%B9%E6%B3%95%0D%0A%E3%80%80%E3%83%A1%E3%83%BC%E3%83%AB%E3%80%80%EF%BC%8F%E3%80%80%E3%81%9D%E3%81%AE%E4%BB%96%EF%BC%9A%EF%BC%88%E5%88%A5%E9%80%94%E6%96%B9%E6%B3%95%E8%A8%98%E8%BC%89%EF%BC%89%0D%0A%E2%97%86%E3%81%9D%E3%81%AE%E4%BB%96%E9%80%A3%E7%B5%A1%E4%BA%8B%E9%A0%85%EF%BC%9A%E3%81%AA%E3%81%97%E3%80%80%EF%BC%8F%E3%80%80%E3%81%82%E3%82%8A%EF%BC%9A%E8%A9%B3%E7%B4%B0%E8%A8%98%E8%BC%89%0D%0A%0D%0A~~~~~~~~~~~~~%0D%0A%E9%83%A8%E9%96%80%E9%95%B7%E3%82%92CC%E3%81%AB%E5%90%AB%E3%82%81%E3%81%BE%E3%81%97%E3%81%9F%E3%81%8B%E3%80%80%E3%81%AF%E3%81%84%E3%80%80%EF%BC%8F%E3%80%80%E3%81%84%E3%81%84%E3%81%88%0D%0A~~~~~~~~~~~~~%E3%81%93%E3%81%93%E3%81%BE%E3%81%A7%EF%BC%88%E6%B6%88%E3%81%95%E3%81%AA%E3%81%84%E3%81%A7%E3%81%8F%E3%81%A0%E3%81%95%E3%81%84%EF%BC%89%0D%0A%E4%B8%8A%E8%A8%98%E3%80%81%E5%AE%9C%E3%81%97%E3%81%8F%E3%81%8A%E9%A1%98%E3%81%84%E8%87%B4%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0D%0A%E4%BB%A5%E4%B8%8A%E3%81%A7%E3%81%99%E3%80%82%0D%0A%0D%0A" class="link-card" data-title="請求申請フォームを開きます">
+                        <i class="card-icon" data-feather="mail"></i>
+                        <span class="card-title">請求申請</span>
+                    </a>
+                    <a href="https://sites.google.com/systena.co.jp/fwdportal/%E5%90%84%E7%A8%AE%E3%83%AA%E3%83%B3%E3%82%AF/web%E5%85%A5%E5%8A%9B%E5%85%88%E8%A1%8C%E7%9D%80%E6%89%8B%E4%BE%9D%E9%A0%BC" class="link-card" data-title="先行着手依頼フォームを開きます">
+                        <i class="card-icon" data-feather="send"></i>
+                        <span class="card-title">先行着手依頼申請</span>
+                    </a>
+                    <a href="https://forms.gle/tvcjcyuvFUcazXV68" class="link-card" data-title="受注稟議書変更申請を行います">
+                        <i class="card-icon" data-feather="send"></i>
+                        <span class="card-title">受注稟議書変更申請</span>
+                    </a>
+                    <a href="https://script.google.com/a/macros/systena.co.jp/s/AKfycbx6F9FurIUQ8M7nFtuDd1P_9_dldmnvPKkHIJkNxu45pse_N0RKzDjkGIudDAyj92pg/exec" class="link-card" data-title="検収書ページを表示します">
+                        <i class="card-icon" data-feather="mail"></i>
+                        <span class="card-title">検収月変更申請</span>
+                    </a>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfA7AlUhBQAvi9sevb_qc5Hpilf1k-4xH2YHdA8oU8XibMU_A/viewform?usp=sf_link" class="link-card" data-title="基本契約書／機密保持契約書の対応依頼を行います">
+                        <i class="card-icon" data-feather="send"></i>
+                        <span class="card-title">基本契約書／機密保持契約書対応依頼申請</span>
+                    </a>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeW083mqFwjR3Pr-a9A-op8yVseslm1bxftJ2swO1YRDF3gNw/viewform?usp=header" class="link-card" data-title="捺印依頼フォームを開きます">
+                        <i class="card-icon" data-feather="send"></i>
+                        <span class="card-title">捺印依頼申請</span>
+                    </a>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSetk5B36VR1jCkACe_wrz2w8Q0CclHsXszhdMnd6hxFnTCSrA/viewform?usp=header" class="link-card" data-title="郵送依頼フォームを開きます">
+                        <i class="card-icon" data-feather="send"></i>
+                        <span class="card-title">郵送依頼申請</span>
+                    </a>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">ツール</h3>
+                    <div class="links-grid">
+                        <a href="https://docs.google.com/spreadsheets/d/1Eg1M8Cyn27RANTQLuVF0XqG4-GwAfza4/export?format=xlsx" class="link-card" data-title="見積作成依頼のExcelデータをダウンロードします">
+                            <i class="card-icon" data-feather="download"></i>
+                            <span class="card-title">見積作成依頼<br>（エクセル）</span>
+                        </a>
+                        <a href="https://drive.google.com/drive/folders/173yj5zfsiEEd3Bkho2Lzrt_KYBG4xKsK?usp=sharing" class="link-card" data-title="検収書ページを表示します">
+                            <i class="card-icon" data-feather="download"></i>
+                            <span class="card-title">検収書</span>
+                        </a>
+                        <a href="https://docs.google.com/spreadsheets/d/13zDetA-8oUDRH0r9aas4aTo48-0vUhH-EcjjuGITx-I/edit?gid=0#gid=0" class="link-card" data-title="請求カレンダーを確認します">
+                            <i class="card-icon" data-feather="calendar"></i>
+                            <span class="card-title">請求カレンダー</span>
+                        </a>
+                        <a href="https://docs.google.com/spreadsheets/d/1ubmS-DjviFtxNHwmBwwNRSwTTC4ZsOtp2AXF3sObhtQ/edit?gid=1628860933#gid=1628860933" class="link-card" data-title="各種番号発番（見積書）を行います">
+                            <i class="card-icon" data-feather="hash"></i>
+                            <span class="card-title">各種番号発番 見積書</span>
+                        </a>
+                        <a href="https://docs.google.com/spreadsheets/d/1ubmS-DjviFtxNHwmBwwNRSwTTC4ZsOtp2AXF3sObhtQ/edit?gid=1646658604#gid=1646658604" class="link-card" data-title="仕事番号（PJCD）発番を行います">
+                            <i class="card-icon" data-feather="hash"></i>
+                            <span class="card-title">各種番号発番 仕事番号（PJCD）</span>
+                        </a>
+                        <a href="https://docs.google.com/spreadsheets/d/1ubmS-DjviFtxNHwmBwwNRSwTTC4ZsOtp2AXF3sObhtQ/edit?gid=2068248401#gid=2068248401" class="link-card" data-title="各種番号発番（注文書・個別契約書）を行います">
+                            <i class="card-icon" data-feather="hash"></i>
+                            <span class="card-title">各種番号発番 注文書・個別契約書</span>
+                        </a>
+                        <a href="https://docs.google.com/spreadsheets/d/1pj56LH9TWS-wl1A7mLdgmRREx6M_jd31fTQR-XqVvhk/edit?gid=1131058103#gid=1131058103" class="link-card" data-title="取引先与信情報を表示します">
+                            <i class="card-icon" data-feather="tool"></i>
+                            <span class="card-title">取引先与信情報<br>(与信有、COD除く)</span>
+                        </a>
+                        <a href="https://docs.google.com/spreadsheets/d/1EzEV7v-sZj__XTG6CoOnUMew77M2bSVITW-lVAVh9k8/edit?gid=179270789#gid=179270789" class="link-card" data-title="与信チェックツールを起動します">
+                            <i class="card-icon" data-feather="tool"></i>
+                            <span class="card-title">与信チェックツール</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">CURE申請</h3>
+                    <div class="links-grid">
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSeP9kO1YDPL2P8VLV5ojMz6b9Kh2zn2BxMuWZGhE2WBX4jhKw/viewform?usp=header" class="link-card" data-title="システナ社員CURE申請ページを開きます">
+                            <i class="card-icon" data-feather="send"></i>
+                            <span class="card-title">システナ社員CURE申請</span>
+                        </a>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfNKRE0N8LicBIpSOG8GlsaaHhlNOo4xY77POkgThych_PlXw/viewform?usp=header" class="link-card" data-title="CURE削除依頼を行います">
+                        <i class="card-icon" data-feather="send"></i>
+                        <span class="card-title">CURE削除依頼申請</span>
+                    </a>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScA8A0OecN0J0U07puhK0282pCGw-JxnjGp7o9dDHmY7lT5Kg/viewform?usp=header" class="link-card" data-title="参画書類関連ページを開きます">
+                        <i class="card-icon" data-feather="send"></i>
+                        <span class="card-title">参画書類関連申請</span>
+                    </a>
+                    <a href="https://docs.google.com/spreadsheets/d/1mwvdZfpT78pSuofiPvUFmUuPTce1pPWJFoCMiu_LlXA/edit?pli=1&gid=1632111289#gid=1632111289" class="link-card" data-title="CURE公開IDを表示します">
+                        <i class="card-icon" data-feather="hash"></i>
+                        <span class="card-title">CURE 公開ID</span>
+                    </a>
+                    </div>
+                </div>
+                <div class="subsection">
+                    <h3 class="subsection-title">手順書</h3>
+                    <div class="links-grid">
+                    <a href="https://sites.google.com/systena.co.jp/mitumoriiraisyo/%E3%83%9B%E3%83%BC%E3%83%A0" class="link-card" data-title="見積作成依頼の手順書を開きます">
+                        <i class="card-icon" data-feather="download"></i>
+                        <span class="card-title">見積作成依頼の<br>手順書</span>
+                    </a>
+                        <a href="https://docs.google.com/presentation/d/1Q5o2P3g3t53dnqN4ZW9hGYw_0D7wDOtp/edit?usp=sharing&ouid=106858394027304540776&rtpof=true&sd=true" class="link-card">
+                            <i class="card-icon" data-feather="download"></i>
+                            <span class="card-title">【NTTデータ用】<br>CURE手順書</span>
+                        </a>
+                        <a href="https://docs.google.com/presentation/d/1Ns2cri3wcFujtrBrc9BytPRCQ4cnhj5g/edit?usp=sharing&ouid=106858394027304540776&rtpof=true&sd=true" class="link-card">
+                            <i class="card-icon" data-feather="download"></i>
+                            <span class="card-title">【NTTデータグループ会社用】CURE手順書</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="section-zaimu">
+                <h2 class="section-title">
+                    <i data-feather="briefcase"></i>
+                    財務経理関連
+                </h2>
+                <div class="links-grid">
+                    <a href="https://docs.google.com/spreadsheets/d/11wGBt1ANxRmWI_2lhn60_PcmfMAPCpU4kN-z6aRJ89Y/edit?gid=0#gid=0" class="link-card">
+                        <i data-feather="file-text"></i>
+                        <span class="card-title">PJコード一覧<br>(売管比較) 44期</span>
+                    </a>
+                    <a href="https://docs.google.com/spreadsheets/d/1Iq0CQu0UDn3rQoHU7kobem6g4O7Aw8S15OrgW_dDFBk/edit?gid=0#gid=0" class="link-card">
+                        <i data-feather="database"></i>
+                        <span class="card-title">PJコード一覧(Master) 44期</span>
+                    </a>
+                    <a href="https://docs.google.com/spreadsheets/d/1FLotseCzsg4axvX034MDqn6cALjHFHH2BLopHCbzFk8/edit?gid=96576128#gid=96576128" class="link-card">
+                        <i data-feather="bar-chart-2"></i>
+                        <span class="card-title">工事進行基準 44期</span>
+                    </a>
+                    <a href="https://docs.google.com/spreadsheets/d/1rSyQ6GoQ5V0zXRv_R6CQSD0p7Urx8m22bWakWNFd6ts/edit?gid=1365535448#gid=1365535448" class="link-card">
+                        <i data-feather="check-square"></i>
+                        <span class="card-title">仕掛明細チェックツール 44期</span>
+                    </a>
+                    <a href="https://docs.google.com/spreadsheets/d/1OUio3r9TrLw7KiLuaJxm7UpZ7hzijfewptZCyiRmCIc/edit?gid=1988491457#gid=1988491457" class="link-card">
+                        <i data-feather="activity"></i>
+                        <span class="card-title">当月_Canbusプロジェクト想定原価チェック</span>
+                    </a>
+                    <a href="https://docs.google.com/spreadsheets/d/1UFyHeX-ClbBsQFIwW-OjWhSafKPUIhERmU9Z08GgDt4/edit?gid=1253754591#gid=1253754591" class="link-card">
+                        <i data-feather="briefcase"></i>
+                        <span class="card-title">TDB_企業情報取得一覧</span>
+                    </a>
+                    <a href="https://docs.google.com/spreadsheets/d/1HUHACDZ1mv3J2cLEPM2YslApX9De5Bm6m4-6OFSso-w/edit?gid=320817372#gid=320817372" class="link-card">
+                        <i data-feather="calendar"></i>
+                        <span class="card-title">年間_原価計算<br>スケジュール</span>
+                    </a>
+                    <a href="https://forms.gle/j6N4rMJ7dHo1K5Qg9" class="link-card">
+                        <i data-feather="feather"></i>
+                        <span class="card-title">【部門長用】<br>UNITコード申請</span>
+                    </a>
+                </div>
+            </section>
+
+            <section class="section" id="section-other">
+                <h2 class="section-title">
+                    <i data-feather="briefcase"></i>
+                    その他
+                </h2>
+                <div class="links-grid">
+                    <a href="https://sites.google.com/systena.co.jp/fwdportal/%E7%A4%BE%E5%93%A1%E6%95%99%E8%82%B2/1on1/1on1-%E9%9B%86%E8%A8%88%E5%A0%B1%E5%91%8A?authuser=0" class="link-card">
+                        <i data-feather="user-check"></i>
+                        <span class="card-title">1on1実施状況</span>
+                    </a>
+                    <a href="https://docs.google.com/presentation/d/11egXn9fX59C80szFEiG8X_cY_97MCakp/edit?slide=id.p1#slide=id.p1" class="link-card">
+                        <i data-feather="map"></i>
+                        <span class="card-title">DI本部居室案内図</span>
+                    </a>
+                    <a href="https://docs.google.com/spreadsheets/d/1WpiEe0nu7IaYfIfYIjVMQnqK1UoJRZuSoQigBiMSuns/edit?gid=936232351#gid=936232351" class="link-card">
+                        <i data-feather="phone"></i>
+                        <span class="card-title">DI本部本社内線表</span>
+                    </a>
+                    <a href="https://sites.google.com/systena.co.jp/link/%E5%90%84%E7%A8%AE%E3%83%AA%E3%83%B3%E3%82%AF/information/%E3%83%9F%E3%83%83%E3%82%B7%E3%83%A7%E3%83%B3%E3%83%AA%E3%83%BC%E3%83%80%E3%83%BC%E4%B8%80%E8%A6%A7?authuser=0" class="link-card">
+                        <i data-feather="user-check"></i>
+                        <span class="card-title">ミッションリーダー一覧</span>
+                    </a>
+                    <a href="https://docs.google.com/spreadsheets/d/1LFJyVsVoNXbAK3mT5eHBwf5Z0RqeDe3l/edit?gid=2052696587#gid=2052696587" class="link-card">
+                        <i data-feather="hash"></i>
+                        <span class="card-title">部門コード</span>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <a href="https://sites.google.com/systena.co.jp/link/%E5%90%84%E7%A8%AE%E3%83%AA%E3%83%B3%E3%82%AF" class="fixed-link">過去リンク</a>
+
+    <script>
+        feather.replace();
+        function filterLinks(term) {
+            term = term.trim().toLowerCase();
+            document.querySelectorAll('.link-card').forEach(card => {
+                card.style.display =
+                card.textContent.toLowerCase().includes(term)
+                    ? 'flex'
+                    : 'none';
+            });
+        }
+    </script>
+</body>
+</html> 
