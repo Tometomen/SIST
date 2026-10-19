@@ -9,7 +9,7 @@ const index = fs.readFileSync(path.join(__dirname, '../apps-script/Index.html'),
 const plain = value => JSON.parse(JSON.stringify(value));
 const allLinks = portal => portal.sections.flatMap(section => section.groups.flatMap(group => group.links));
 
-test('添付HTMLの全75件のURL、名前、改行、アイコン、説明とCSSを保持する', () => {
+test('添付HTMLの全75件のURL、名前、改行、アイコン、説明と基本CSSを保持する', () => {
   const { seed } = createRuntime();
   const anchors = [...original.matchAll(/<a\s+([^>]*class="link-card"[^>]*)>([\s\S]*?)<\/a>/g)];
   assert.equal(anchors.length, 75);

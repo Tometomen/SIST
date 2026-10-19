@@ -213,6 +213,45 @@
         .subsection { margin-top: 2rem; }
         .subsection-title { font-size: 1.25rem; margin-bottom: 1rem; }
     </style>
+    <style>
+        /* 白背景のページに馴染む配色。寸法・グリッドは元の指定を使用。 */
+        html, body {
+            background-color: #fff;
+        }
+        .search-box input {
+            background-color: #fff;
+            border-color: #dfe3e7;
+            box-shadow: 0 1px 3px rgba(15,23,42,0.03);
+        }
+        .section {
+            background-color: #fff;
+            box-shadow: 0 0 0 1px #edf0f2, 0 2px 8px rgba(15,23,42,0.025);
+        }
+        .link-card {
+            background-color: #fff;
+            border-color: #e4e7ec;
+            box-shadow: 0 1px 3px rgba(15,23,42,0.035);
+        }
+        .link-card:hover {
+            background-color: #fff8f0;
+            border-color: #f2d5b5;
+            box-shadow: 0 3px 8px rgba(15,23,42,0.06);
+        }
+        .fixed-link {
+            background-color: #fff;
+            color: #475467;
+            box-shadow: 0 0 0 1px #dfe3e7, 0 2px 8px rgba(15,23,42,0.05);
+        }
+        .fixed-link:hover {
+            background-color: #fff8f0;
+            color: #b95b00;
+        }
+        .link-card:focus-visible,
+        .fixed-link:focus-visible {
+            outline: 2px solid #ff8c00;
+            outline-offset: 3px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
