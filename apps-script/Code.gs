@@ -6,10 +6,21 @@ const LINK_HEADERS_ = [
   'リンク名', 'URL', 'アイコン', '説明', '表示順', '表示'
 ];
 
+/** エディタで選択する実行用関数。シートを開いた管理画面からのみ実行する。 */
+function setup() {
+  SpreadsheetApp.getUi();
+  return setup_();
+}
+
+function diagnose() {
+  SpreadsheetApp.getUi();
+  return diagnose_();
+}
+
 function onOpen() {
   SpreadsheetApp.getUi().createMenu('リンク集')
-    .addItem('初期設定（既存データは保持）', 'setup_')
-    .addItem('診断（実行ログに結果を表示）', 'diagnose_')
+    .addItem('初期設定（既存データは保持）', 'setup')
+    .addItem('診断（実行ログに結果を表示）', 'diagnose')
     .addToUi();
 }
 
@@ -74,8 +85,8 @@ function doGet() {
     console.error(error); // 詳細は管理者の実行ログに残す。
     portal = { title: '各種リンク集', browserTitle: '社内リンク集', sections: [], pastLink: null };
     errorMessage = error && error.portalCode === 'SETUP_REQUIRED'
-      ? '初期設定が完了していません。管理用スプレッドシートの「拡張機能 → Apps Script」で setup_ を一度実行し、権限を承認してください。'
-      : 'リンク集を読み込めませんでした。管理者は Apps Script で diagnose_ を実行し、表示されたエラーを確認してください。';
+      ? '初期設定が完了していません。管理用スプレッドシートの「拡張機能 → Apps Script」で setup を一度実行し、権限を承認してください。'
+      : 'リンク集を読み込めませんでした。管理者は Apps Script で diagnose を実行し、表示されたエラーを確認してください。';
   }
   return HtmlService.createHtmlOutput(renderPage_(portal, errorMessage)).setTitle(portal.browserTitle)
     .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
@@ -85,7 +96,7 @@ function doGet() {
 function readPortal_() {
   const id = PropertiesService.getScriptProperties().getProperty(SPREADSHEET_PROPERTY_);
   if (!id) {
-    const error = new Error('初期設定が完了していません。管理用スプレッドシートの「拡張機能 → Apps Script」で setup_ を実行してください。');
+    const error = new Error('初期設定が完了していません。管理用スプレッドシートの「拡張機能 → Apps Script」で setup を実行してください。');
     error.portalCode = 'SETUP_REQUIRED';
     throw error;
   }
@@ -148,7 +159,7 @@ function readPortal_() {
 
 function readSheet_(spreadsheet, name, headers) {
   const sheet = spreadsheet.getSheetByName(name);
-  if (!sheet || sheet.getLastRow() === 0) throw new Error(name + ' シートがありません。setup_ を実行してください。');
+  if (!sheet || sheet.getLastRow() === 0) throw new Error(name + ' シートがありません。setup を実行してください。');
   const values = sheet.getDataRange().getDisplayValues();
   const actual = values.shift().map(text_);
   if (headers.some((header, index) => actual[index] !== header)) {

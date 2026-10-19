@@ -128,17 +128,17 @@ test('見出し破損、分類の矛盾、無効な表示・順序を検出す�
 
 test('未設定・シート欠落を管理者ログに残し、利用者にエラーを表示する', () => {
   const runtime = createRuntime({ initialized: false });
-  assert.throws(() => runtime.context.readPortal_(), /setup_/);
+  assert.throws(() => runtime.context.readPortal_(), /setup/);
   const output = runtime.context.doGet();
   assert.equal(runtime.errors.length, 1);
   assert.ok(output.html.includes('role="alert"'));
   assert.ok(output.html.includes('初期設定が完了していません'));
-  assert.ok(output.html.includes('setup_'));
+  assert.ok(output.html.includes('setup を一度実行'));
   assert.ok(!output.html.includes('class="link-card"'));
   const missing = createRuntime();
   missing.sheets.delete('リンク');
   assert.throws(() => missing.context.readPortal_(), /シート/);
-  assert.ok(missing.context.doGet().html.includes('diagnose_'));
+  assert.ok(missing.context.doGet().html.includes('diagnose を実行'));
 });
 
 test('診断は実シート相当のデータを読み、件数だけをログに出す', () => {
@@ -158,6 +158,21 @@ test('初期設定は既存の不正データを隠して成功扱いにせず�
   assert.throws(() => context.setup_(), /見出し/);
   assert.equal(JSON.stringify([...sheets]), before);
   assert.ok(!logs.some(message => message.includes('初期設定完了')));
+});
+
+test('エディタ実行用のsetupとdiagnoseから初期登録・読み取りを完了できる', () => {
+  const { context } = createRuntime({ seedSheets: false, initialized: false });
+  assert.deepEqual(plain(context.setup()), { sections: 5, links: 75 });
+  assert.deepEqual(plain(context.diagnose()), { sections: 5, links: 75 });
+});
+
+test('ウェブアプリのようにシートUIがない呼び出しでは公開実行関数が処理を始めない', () => {
+  const { context, sheets, properties } = createRuntime({ seedSheets: false, initialized: false });
+  context.SpreadsheetApp.getUi = () => { throw new Error('UI unavailable'); };
+  assert.throws(() => context.setup(), /UI unavailable/);
+  assert.throws(() => context.diagnose(), /UI unavailable/);
+  assert.equal(sheets.size, 0);
+  assert.equal(properties.size, 0);
 });
 
 test('全件非表示を空の状態として表示し、非表示行の未入力URLは許容する', () => {

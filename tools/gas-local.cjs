@@ -44,6 +44,7 @@ function createRuntime({ seedSheets = true, initialized = true } = {}) {
   const context = vm.createContext({
     console: { error: error => errors.push(error), log: message => logs.push(message) },
     SpreadsheetApp: {
+      getUi: () => ({}),
       getActiveSpreadsheet: () => spreadsheet,
       openById(id) { if (id !== 'local-sheet') throw new Error('Unknown sheet'); return spreadsheet; },
       flush() {}
