@@ -35,13 +35,14 @@ function createRuntime({ seedSheets = true, initialized = true } = {}) {
   const sheets = new Map();
   const properties = new Map(initialized ? [['LINKS_SPREADSHEET_ID', 'local-sheet']] : []);
   const errors = [];
+  const logs = [];
   const spreadsheet = {
     getId: () => 'local-sheet',
     getSheetByName: name => sheets.get(name),
     insertSheet(name) { const sheet = new Sheet(); sheets.set(name, sheet); return sheet; }
   };
   const context = vm.createContext({
-    console: { error: error => errors.push(error) },
+    console: { error: error => errors.push(error), log: message => logs.push(message) },
     SpreadsheetApp: {
       getActiveSpreadsheet: () => spreadsheet,
       openById(id) { if (id !== 'local-sheet') throw new Error('Unknown sheet'); return spreadsheet; },
@@ -70,7 +71,7 @@ function createRuntime({ seedSheets = true, initialized = true } = {}) {
     sheets.set('リンク', new Sheet([headers, ...seed.links]));
     sheets.set('設定', new Sheet([['項目', '値'], ...seed.settings]));
   }
-  return { context, sheets, properties, errors, seed, headers };
+  return { context, sheets, properties, errors, logs, seed, headers };
 }
 
 module.exports = { createRuntime };

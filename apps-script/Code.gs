@@ -9,6 +9,7 @@ const LINK_HEADERS_ = [
 function onOpen() {
   SpreadsheetApp.getUi().createMenu('リンク集')
     .addItem('初期設定（既存データは保持）', 'setup_')
+    .addItem('診断（実行ログに結果を表示）', 'diagnose_')
     .addToUi();
 }
 
@@ -26,9 +27,24 @@ function setup_() {
     initializeSheet_(spreadsheet, SETTINGS_SHEET_, [['項目', '値']].concat(seed.settings), false);
     SpreadsheetApp.flush();
     PropertiesService.getScriptProperties().setProperty(SPREADSHEET_PROPERTY_, spreadsheet.getId());
+    const result = diagnose_();
+    console.log('初期設定完了。ウェブアプリを再読み込みしてください。');
+    return result;
   } finally {
     lock.releaseLock();
   }
+}
+
+/** エディタまたはスプレッドシートのメニューから実行。ID・URL・セル値は出力しない。 */
+function diagnose_() {
+  const portal = readPortal_();
+  const result = {
+    sections: portal.sections.length,
+    links: portal.sections.reduce((count, section) =>
+      count + section.groups.reduce((sum, group) => sum + group.links.length, 0), 0)
+  };
+  console.log('診断OK: ' + result.links + '件のリンク、' + result.sections + 'セクションを読み込めました。');
+  return result;
 }
 
 function initializeSheet_(spreadsheet, name, values, isLinks) {
@@ -57,7 +73,9 @@ function doGet() {
   } catch (error) {
     console.error(error); // 詳細は管理者の実行ログに残す。
     portal = { title: '各種リンク集', browserTitle: '社内リンク集', sections: [], pastLink: null };
-    errorMessage = 'リンク集を読み込めませんでした。管理者に「リンク」「設定」シートと初期設定の確認を依頼してください。';
+    errorMessage = error && error.portalCode === 'SETUP_REQUIRED'
+      ? '初期設定が完了していません。管理用スプレッドシートの「拡張機能 → Apps Script」で setup_ を一度実行し、権限を承認してください。'
+      : 'リンク集を読み込めませんでした。管理者は Apps Script で diagnose_ を実行し、表示されたエラーを確認してください。';
   }
   return HtmlService.createHtmlOutput(renderPage_(portal, errorMessage)).setTitle(portal.browserTitle)
     .addMetaTag('viewport', 'width=device-width, initial-scale=1.0');
@@ -66,7 +84,11 @@ function doGet() {
 /** 毎回シートを読み込むため、編集は次のページ再読込で反映される。 */
 function readPortal_() {
   const id = PropertiesService.getScriptProperties().getProperty(SPREADSHEET_PROPERTY_);
-  if (!id) throw new Error('Apps Script エディタで setup_ を実行してください。');
+  if (!id) {
+    const error = new Error('初期設定が完了していません。管理用スプレッドシートの「拡張機能 → Apps Script」で setup_ を実行してください。');
+    error.portalCode = 'SETUP_REQUIRED';
+    throw error;
+  }
   const spreadsheet = SpreadsheetApp.openById(id);
   const rows = readSheet_(spreadsheet, LINK_SHEET_, LINK_HEADERS_);
   const settings = readSettings_(spreadsheet);

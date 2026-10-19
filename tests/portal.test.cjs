@@ -69,8 +69,9 @@ test('表示順が同じ場合はシートの行順を保ち、空行は無視�
 });
 
 test('初期設定は75件と設定を作成し、再実行で管理者の編集・削除を上書きしない', () => {
-  const { context, sheets, properties } = createRuntime({ seedSheets: false, initialized: false });
-  context.setup_();
+  const { context, sheets, properties, logs } = createRuntime({ seedSheets: false, initialized: false });
+  assert.deepEqual(plain(context.setup_()), { sections: 5, links: 75 });
+  assert.ok(logs.some(message => message.includes('初期設定完了')));
   assert.equal(properties.get('LINKS_SPREADSHEET_ID'), 'local-sheet');
   assert.equal(sheets.get('リンク').rows.length, 76);
   const rows = sheets.get('リンク').rows;
@@ -131,10 +132,32 @@ test('未設定・シート欠落を管理者ログに残し、利用者にエ�
   const output = runtime.context.doGet();
   assert.equal(runtime.errors.length, 1);
   assert.ok(output.html.includes('role="alert"'));
+  assert.ok(output.html.includes('初期設定が完了していません'));
+  assert.ok(output.html.includes('setup_'));
   assert.ok(!output.html.includes('class="link-card"'));
   const missing = createRuntime();
   missing.sheets.delete('リンク');
   assert.throws(() => missing.context.readPortal_(), /シート/);
+  assert.ok(missing.context.doGet().html.includes('diagnose_'));
+});
+
+test('診断は実シート相当のデータを読み、件数だけをログに出す', () => {
+  const { context, sheets, logs } = createRuntime();
+  sheets.get('リンク').rows[1][9] = false;
+  assert.deepEqual(plain(context.diagnose_()), { sections: 5, links: 74 });
+  assert.ok(logs[0].includes('診断OK: 74件'));
+  assert.ok(!logs.join('\n').includes('https://'));
+  sheets.get('リンク').rows[2][5] = 'invalid';
+  assert.throws(() => context.diagnose_(), /リンク 3行目のURL/);
+});
+
+test('初期設定は既存の不正データを隠して成功扱いにせず、そのまま保持して原因を返す', () => {
+  const { context, sheets, logs } = createRuntime();
+  sheets.get('リンク').rows[0][5] = '別の見出し';
+  const before = JSON.stringify([...sheets]);
+  assert.throws(() => context.setup_(), /見出し/);
+  assert.equal(JSON.stringify([...sheets]), before);
+  assert.ok(!logs.some(message => message.includes('初期設定完了')));
 });
 
 test('全件非表示を空の状態として表示し、非表示行の未入力URLは許容する', () => {
